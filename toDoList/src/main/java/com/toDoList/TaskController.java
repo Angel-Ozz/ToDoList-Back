@@ -19,50 +19,49 @@ import jakarta.validation.Valid;
 
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
-@RequestMapping("/tasks")
+@RequestMapping("/todos")
 public class TaskController {
 
-     private final TaskRepository taskRepository;
+    private final TaskRepository taskRepository;
 
-    public TaskController(TaskRepository taskRepository){
+    public TaskController(TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
     }
 
     @GetMapping("")
-    List<Tasks> findAll(){
+    List<Tasks> findAll() {
         return taskRepository.findAll();
     }
 
     @GetMapping("/{id}")
-    Tasks findById(@PathVariable Integer id) throws Exception{
+    Tasks findById(@PathVariable Integer id) throws Exception {
 
-        Optional <Tasks> task = taskRepository.findById(id);
-        if(task.isEmpty()){
+        Optional<Tasks> task = taskRepository.findById(id);
+        if (task.isEmpty()) {
             throw new Exception();
         }
         return task.get();
     }
 
-    //post
+    // post
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("")
-    void create (@Valid @RequestBody Tasks task){
+    void create(@Valid @RequestBody Tasks task) {
         taskRepository.create(task);
     }
 
-    //put
+    // put
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/{id}")
-    void update(@Valid @RequestBody Tasks task, @PathVariable Integer id){
+    void update(@Valid @RequestBody Tasks task, @PathVariable Integer id) {
         taskRepository.update(task, id);
     }
-    
-    //delete
+
+    // delete
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
-    void delete(@PathVariable Integer id){
+    void delete(@PathVariable Integer id) {
         taskRepository.delete(id);
     }
 
-    
 }

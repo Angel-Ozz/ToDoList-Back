@@ -12,6 +12,7 @@ import jakarta.annotation.PostConstruct;
 public class TaskRepository {
 
     private List<Tasks> tasks = new ArrayList<>();
+    private int currentId = 0;
 
     // Find all tasks
     public List<Tasks> findAll() {
@@ -20,7 +21,9 @@ public class TaskRepository {
 
     // Create a new task
     public void create(Tasks task) {
-        if (task != null && findById(task.id()).isEmpty()) {
+        if (task != null && findById(task.getId()).isEmpty()) {
+            currentId += 1;
+            task.setId(currentId);
             tasks.add(task);
         } else {
             throw new IllegalArgumentException("Task with the same ID already exists");
@@ -30,7 +33,7 @@ public class TaskRepository {
     // Find a task by ID
     public Optional<Tasks> findById(Integer id) {
         return tasks.stream()
-                .filter(task -> task.id().equals(id))
+                .filter(task -> task.getId().equals(id))
                 .findFirst();
     }
 
@@ -43,18 +46,17 @@ public class TaskRepository {
 
     // Delete a task by ID
     public boolean delete(Integer id) {
-        return tasks.removeIf(task -> task.id().equals(id));
+        return tasks.removeIf(task -> task.getId().equals(id));
     }
 
     // Initialize repository with sample data
     @PostConstruct
     private void init() {
         tasks.add(new Tasks(
-            1,
-            "Do a to-do list",
-            TaskPriority.HIGH,
-            false,
-            LocalDate.now()
-        ));
+                currentId,
+                "Do a to-do list",
+                TaskPriority.HIGH,
+                false,
+                LocalDate.now()));
     }
 }
