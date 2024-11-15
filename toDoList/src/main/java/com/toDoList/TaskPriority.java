@@ -1,6 +1,5 @@
 package com.toDoList;
 
 public enum TaskPriority {
-    LOW, MEDIUM, HIGH
-
+    HIGH, MEDIUM, LOW
 }

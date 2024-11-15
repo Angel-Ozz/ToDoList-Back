@@ -1,16 +1,28 @@
-package com.toDoList;
+package com.toDoList.models;
 
 import java.time.LocalDate;
+
+import org.springframework.data.annotation.Id;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.toDoList.TaskPriority;
+
+import jakarta.validation.constraints.Size; //javax dsnt work with spring
 import jakarta.validation.constraints.NotEmpty;
 
 public class Tasks {
+    @Id
     private Integer id;
     @NotEmpty
+    @Size(max = 120)
     private String taskName;
     private TaskPriority taskPriority;
-    private LocalDate creationDate;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY) // USed for deserialization protection, because it was always
+                                                          // setting it to null
+    private LocalDate creationDate = LocalDate.now();
     private Boolean completed;
     private LocalDate taskDueDate;
+    private LocalDate doneDate;
 
     // No-argument constructor (required for Jackson)
     public Tasks() {
@@ -24,6 +36,7 @@ public class Tasks {
         this.creationDate = LocalDate.now();
         this.completed = completed;
         this.taskDueDate = taskDate;
+
     }
 
     // constr wthout dueDate
@@ -75,7 +88,13 @@ public class Tasks {
     }
 
     public void setCompleted(Boolean completed) {
-        this.completed = completed;
+        if (completed != null && completed && (this.completed == null || !this.completed)) {
+            this.completed = true;
+            this.doneDate = LocalDate.now();
+        } else if (completed != null && !completed) {
+            this.completed = false;
+            this.doneDate = null;
+        }
     }
 
     public LocalDate getTaskDueDate() {
@@ -84,6 +103,10 @@ public class Tasks {
 
     public void setTaskDueDate(LocalDate taskDueDate) {
         this.taskDueDate = taskDueDate;
+    }
+
+    public LocalDate getDoneDate() {
+        return doneDate;
     }
 
 }
