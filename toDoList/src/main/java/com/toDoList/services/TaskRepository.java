@@ -4,9 +4,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.time.Duration;
 
 import org.springframework.stereotype.Repository;
 
@@ -82,13 +84,13 @@ public class TaskRepository {
     // Update a task (using patch because if we use put we need to retrieve the data
     // from the not-updated obj)
     public Tasks patchUpdate(Integer id, Tasks partialUpdate) {
-        Optional<Tasks> optionalTask = findById(id);
+        Optional<Tasks> task = findById(id);
 
-        if (optionalTask.isEmpty()) {
+        if (task.isEmpty()) {
             throw new IllegalArgumentException("ToDo not found");
         }
 
-        Tasks existingTask = optionalTask.get();
+        Tasks existingTask = task.get();
 
         if (partialUpdate.getTaskName() != null) {
             existingTask.setTaskName(partialUpdate.getTaskName());
@@ -124,6 +126,27 @@ public class TaskRepository {
             }
             return task;
         });
+    }
+
+    // avrg time between creation and completion of tasks (pd, yay lambda functions)
+    public double getAverageCompletionTime() {
+        return tasks.stream()
+                .filter(Tasks::getCompleted) // this is amazin, a short way to use a lambda function, same as task ->
+                                             // task.getCompleted()
+                .mapToDouble(task -> Duration.between(task.getCreationDate(), task.getDoneDate()).toMinutes())
+                .average()
+                .orElse(0.0); // 0.0 if there are no cmpltd tasks
+
+    }
+
+    // same as above but divided by priorityy
+    public Map<TaskPriority, Double> getAverageCompletionTimePerPriority() {
+        return tasks.stream()
+                .filter(Tasks::getCompleted)
+                .collect(Collectors.groupingBy(
+                        Tasks::getTaskPriority,
+                        Collectors.averagingDouble(
+                                task -> Duration.between(task.getCreationDate(), task.getDoneDate()).toMinutes())));
     }
 
     // Delete a task by ID

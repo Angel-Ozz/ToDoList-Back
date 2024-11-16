@@ -1,6 +1,7 @@
 package com.toDoList.models;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.Id;
 
@@ -19,10 +20,10 @@ public class Tasks {
     private TaskPriority taskPriority;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY) // USed for deserialization protection, because it was always
                                                           // setting it to null
-    private LocalDate creationDate = LocalDate.now();
+    private LocalDateTime creationDate = LocalDateTime.now();
     private Boolean completed;
     private LocalDate taskDueDate;
-    private LocalDate doneDate;
+    private LocalDateTime doneDate;
 
     // this bcause json serialization and des
     public Tasks() {
@@ -33,7 +34,7 @@ public class Tasks {
         this.id = id;
         this.taskName = taskName;
         this.taskPriority = taskPriority;
-        this.creationDate = LocalDate.now();
+        this.creationDate = LocalDateTime.now();
         this.completed = completed;
         this.taskDueDate = taskDate;
 
@@ -44,7 +45,7 @@ public class Tasks {
         this.id = id;
         this.taskName = taskName;
         this.taskPriority = taskPriority;
-        this.creationDate = LocalDate.now();
+        this.creationDate = LocalDateTime.now();
         this.completed = completed;
         this.taskDueDate = null;
     }
@@ -75,11 +76,11 @@ public class Tasks {
         this.taskPriority = taskPriority;
     }
 
-    public LocalDate getCreationDate() {
+    public LocalDateTime getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(LocalDate creationDate) {
+    public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
     }
 
@@ -90,7 +91,7 @@ public class Tasks {
     public void setCompleted(Boolean completed) {
         if (completed != null && completed && (this.completed == null || !this.completed)) {
             this.completed = true;
-            this.doneDate = LocalDate.now();
+            this.doneDate = LocalDateTime.now();
         } else if (completed != null && !completed) {
             this.completed = false;
             this.doneDate = null;
@@ -105,7 +106,7 @@ public class Tasks {
         this.taskDueDate = taskDueDate;
     }
 
-    public LocalDate getDoneDate() {
+    public LocalDateTime getDoneDate() {
         return doneDate;
     }
 
