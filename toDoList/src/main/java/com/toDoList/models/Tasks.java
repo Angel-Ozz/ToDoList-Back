@@ -99,7 +99,6 @@ public class Tasks {
     }
 
     public LocalDate getTaskDueDate() {
-        System.out.println("Received taskDueDate: " + taskDueDate);
         return taskDueDate;
     }
 
