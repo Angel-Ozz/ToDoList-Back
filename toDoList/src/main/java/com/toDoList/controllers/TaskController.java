@@ -1,6 +1,7 @@
 package com.toDoList.controllers;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.toDoList.TaskPriority;
 import com.toDoList.models.Tasks;
 import com.toDoList.services.TaskRepository;
 
@@ -52,6 +54,18 @@ public class TaskController {
             throw new Exception();
         }
         return task.get();
+    }
+
+    // get4 time general
+    @GetMapping("/avg-done-time")
+    public double getAverageCompletionTime() {
+        return taskRepository.getAverageCompletionTime();
+    }
+
+    // get4 time per prior
+    @GetMapping("/avg-done-time-priorities")
+    public Map<TaskPriority, Double> getAverageCompletionTimePerPriority() {
+        return taskRepository.getAverageCompletionTimePerPriority();
     }
 
     // post
