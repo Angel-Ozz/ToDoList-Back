@@ -133,7 +133,8 @@ public class TaskRepository {
         return tasks.stream()
                 .filter(Tasks::getCompleted) // this is amazin, a short way to use a lambda function, same as task ->
                                              // task.getCompleted()
-                .mapToDouble(task -> Duration.between(task.getCreationDate(), task.getDoneDate()).toMinutes())
+                .mapToDouble(
+                        task -> Math.floor(Duration.between(task.getCreationDate(), task.getDoneDate()).toMinutes()))
                 .average()
                 .orElse(0.0); // 0.0 if there are no cmpltd tasks
 
@@ -146,7 +147,8 @@ public class TaskRepository {
                 .collect(Collectors.groupingBy(
                         Tasks::getTaskPriority,
                         Collectors.averagingDouble(
-                                task -> Duration.between(task.getCreationDate(), task.getDoneDate()).toMinutes())));
+                                task -> Math.floor(
+                                        Duration.between(task.getCreationDate(), task.getDoneDate()).toMinutes()))));
     }
 
     // Delete a task by ID
