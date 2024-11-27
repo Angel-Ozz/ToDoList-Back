@@ -52,7 +52,7 @@ public class TaskRepository {
         // Sorting
         if ("priority".equalsIgnoreCase(sortBy)) {
             taskStream = taskStream.sorted(Comparator.comparing(Tasks::getTaskPriority));
-        } else if ("dueDate".equalsIgnoreCase(sortBy)) {
+        } else if ("taskDueDate".equalsIgnoreCase(sortBy)) {
             taskStream = taskStream.sorted(Comparator.comparing(Tasks::getTaskDueDate));
         }
 
